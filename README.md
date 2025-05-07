@@ -1,5 +1,10 @@
 # Trippin - Travel Blog Project
 
+<img src="image-1.png" width="425" height="644">
+<img src="image-2.png" width="425" height="644">
+<img src="image-3.png" width="425" height="644">
+<img src="image-4.png" width="425" height="644">
+
 ## Project Structure
 
 This Next.js 15 project follows the App Router pattern with a `src` directory structure:
