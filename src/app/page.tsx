@@ -1,103 +1,196 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Calendar, MapPin } from "lucide-react";
+
+const Home = () => {
+  const router = useRouter();
+  const [destination, setDestination] = useState("");
+  const [duration, setDuration] = useState("");
+  const [travelWith, setTravelWith] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    localStorage.setItem(
+      "tripDetails",
+      JSON.stringify({
+        destination,
+        duration,
+        travelWith,
+      })
+    );
+
+    router.push("/home");
+  };
+
+  const handleTravelWithSelection = (type: string) => {
+    setTravelWith(type);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="dark:bg-black dark:text-[#F5F5F5] h-screen px-4 py-8 flex flex-col justify-between">
+      <div>
+        <div className="mb-7">
+          <h2 className="text-2xl font-semibold">
+            Plan Your Journey, Your Way!
+          </h2>
+          <p className="text-sm">
+            Let&apos;s create your personalised travel experience
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <form className="mt-7 flex flex-col justify-between h-full" onSubmit={handleSubmit}>
+          <div className="space-y-7">
+            <div>
+              <label htmlFor="destination" className="font-medium">
+                Where would you like to go?
+              </label>
+              <div className="relative flex mt-2">
+                <input
+                  id="destination"
+                  type="text"
+                  placeholder="Enter Destination"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg pr-4 pl-10 py-2 w-full placeholder:text-black dark:placeholder:text-white`}
+                  value={destination}
+                  onChange={(e) => {
+                    setDestination(e.target.value);
+                  }}
+                />
+                <MapPin className="size-4 absolute top-1/2 -translate-y-1/2 left-3 text-[#666666]" />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="duration" className="font-medium">
+                How long will you stay?
+              </label>
+              <div className="relative flex mt-2">
+                <select
+                  id="duration"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg pr-4 pl-10 py-3 w-full placeholder:text-black dark:placeholder:text-white`}
+                  value={duration}
+                  onChange={(e) => {
+                    setDuration(e.target.value);
+                  }}
+                >
+                  <option value="">Select Duration</option>
+                  <option value="1-3">1-3 days</option>
+                  <option value="4-7">4-7 days</option>
+                  <option value="8-14">1-2 weeks</option>
+                  <option value="15-30">2-4 weeks</option>
+                  <option value="30+">More than a month</option>
+                </select>
+                <Calendar className="size-4 absolute top-1/2 -translate-y-1/2 left-3 text-[#666666]" />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="" className="font-medium">
+                Who are you traveling with?
+              </label>
+              <div className="grid grid-cols-2 gap-3 mt-2">
+                <button
+                  type="button"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg p-2.5 flex items-center justify-center gap-3 ${
+                    travelWith === "Solo" ? "ring-2 ring-[#3643FB]" : ""
+                  }`}
+                  onClick={() => handleTravelWithSelection("Solo")}
+                >
+                  <svg
+                    width="24"
+                    height="25"
+                    viewBox="0 0 24 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.375 5.04166C10.375 4.37759 10.7266 3.79166 11.3125 3.44009C11.8594 3.08853 12.6016 3.08853 13.1875 3.44009C13.7344 3.79166 14.125 4.37759 14.125 5.04166C14.125 5.74478 13.7344 6.33072 13.1875 6.68228C12.6016 7.03384 11.8594 7.03384 11.3125 6.68228C10.7266 6.33072 10.375 5.74478 10.375 5.04166ZM11.625 10.0807V15.0417H12.875V10.0807C12.8359 10.0807 12.7969 10.0417 12.7578 10.0417H11.7031C11.6641 10.0417 11.625 10.0417 11.625 10.0807ZM11.625 16.9167V22.2292C11.625 22.776 11.1953 23.1667 10.6875 23.1667C10.1406 23.1667 9.75 22.776 9.75 22.2292V11.9167L8.03125 14.8854C7.79688 15.3542 7.21094 15.5104 6.78125 15.237C6.3125 15.0026 6.15625 14.4167 6.42969 13.987L8.69531 9.92447C9.32031 8.86978 10.4531 8.16666 11.7031 8.16666H12.7578C14.0078 8.16666 15.1406 8.86978 15.7656 9.92447L18.0312 13.987C18.3047 14.4167 18.1484 15.0026 17.6797 15.237C17.25 15.5104 16.6641 15.3542 16.4297 14.8854L14.75 11.9167V22.2292C14.75 22.776 14.3203 23.1667 13.8125 23.1667C13.2656 23.1667 12.875 22.776 12.875 22.2292V16.9167H11.625V22.2292ZM22.25 9.41666C21.5469 9.41666 20.9609 9.06509 20.6094 8.47916C20.2578 7.93228 20.2578 7.19009 20.6094 6.60416C20.9609 6.05728 21.5469 5.66666 22.25 5.66666C22.9141 5.66666 23.5 6.05728 23.8516 6.60416C24.2031 7.19009 24.2031 7.93228 23.8516 8.47916C23.5 9.06509 22.9141 9.41666 22.25 9.41666ZM26.4297 17.3854L24.5547 14.1042L26.3516 19.8854C26.4688 20.276 26.1953 20.6667 25.7656 20.6667H24.75V24.7292C24.75 25.276 24.3203 25.6667 23.8125 25.6667C23.2656 25.6667 22.875 25.276 22.875 24.7292V20.6667H21.625V24.7292C21.625 25.276 21.1953 25.6667 20.6875 25.6667C20.1406 25.6667 19.75 25.276 19.75 24.7292V20.6667H18.6953C18.3047 20.6667 17.9922 20.276 18.1094 19.8854L19.9062 14.1042L18.0312 17.3854C17.7969 17.8542 17.2109 18.0104 16.7812 17.737C16.3125 17.5026 16.1562 16.9167 16.4297 16.487L18.4219 12.8932C19.2031 11.526 20.6484 10.7057 22.25 10.7057C23.8125 10.7057 25.2578 11.526 26.0391 12.8932L28.0312 16.487C28.3047 16.9167 28.1484 17.5026 27.6797 17.737C27.25 18.0104 26.6641 17.8542 26.4297 17.3854ZM24.0469 18.7917L22.25 12.9713L20.4141 18.7917H24.0469Z"
+                      fill="currentColor"
+                      className="dark:fill-[#F5F5F5] fill-black"
+                    />
+                  </svg>
+                  Solo
+                </button>
+                <button
+                  type="button"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg p-2.5 flex items-center justify-center gap-3 ${
+                    travelWith === "Couple" ? "ring-2 ring-[#3643FB]" : ""
+                  }`}
+                  onClick={() => handleTravelWithSelection("Couple")}
+                >
+                  <svg
+                    width="29"
+                    height="30"
+                    viewBox="0 0 29 30"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9.75 9.41666C9.04688 9.41666 8.46094 9.06509 8.10938 8.47916C7.75781 7.93228 7.75781 7.19009 8.10938 6.60416C8.46094 6.05728 9.04688 5.66666 9.75 5.66666C10.4141 5.66666 11 6.05728 11.3516 6.60416C11.7031 7.19009 11.7031 7.93228 11.3516 8.47916C11 9.06509 10.4141 9.41666 9.75 9.41666ZM9.20312 12.5417C9.16406 12.5417 9.125 12.5807 9.125 12.5807V17.5417H10.375V12.5807C10.3359 12.5417 10.2969 12.5417 10.2578 12.5417H9.20312ZM9.125 24.7292C9.125 25.276 8.69531 25.6667 8.1875 25.6667C7.64062 25.6667 7.25 25.276 7.25 24.7292V14.4167L5.53125 17.3854C5.29688 17.8542 4.71094 18.0104 4.28125 17.737C3.8125 17.5026 3.65625 16.9167 3.92969 16.487L6.19531 12.4245C6.82031 11.3698 7.95312 10.6667 9.20312 10.6667H10.2578C11.5078 10.6667 12.6406 11.3698 13.2656 12.4245L15.5312 16.487C15.8047 16.9167 15.6484 17.5026 15.1797 17.737C14.75 18.0104 14.1641 17.8542 13.9297 17.3854L12.25 14.4167V24.7292C12.25 25.276 11.8203 25.6667 11.3125 25.6667C10.7656 25.6667 10.375 25.276 10.375 24.7292V19.4167H9.125V24.7292ZM22.25 9.41666C21.5469 9.41666 20.9609 9.06509 20.6094 8.47916C20.2578 7.93228 20.2578 7.19009 20.6094 6.60416C20.9609 6.05728 21.5469 5.66666 22.25 5.66666C22.9141 5.66666 23.5 6.05728 23.8516 6.60416C24.2031 7.19009 24.2031 7.93228 23.8516 8.47916C23.5 9.06509 22.9141 9.41666 22.25 9.41666ZM26.4297 17.3854L24.5547 14.1042L26.3516 19.8854C26.4688 20.276 26.1953 20.6667 25.7656 20.6667H24.75V24.7292C24.75 25.276 24.3203 25.6667 23.8125 25.6667C23.2656 25.6667 22.875 25.276 22.875 24.7292V20.6667H21.625V24.7292C21.625 25.276 21.1953 25.6667 20.6875 25.6667C20.1406 25.6667 19.75 25.276 19.75 24.7292V20.6667H18.6953C18.3047 20.6667 17.9922 20.276 18.1094 19.8854L19.9062 14.1042L18.0312 17.3854C17.7969 17.8542 17.2109 18.0104 16.7812 17.737C16.3125 17.5026 16.1562 16.9167 16.4297 16.487L18.4219 12.8932C19.2031 11.526 20.6484 10.7057 22.25 10.7057C23.8125 10.7057 25.2578 11.526 26.0391 12.8932L28.0312 16.487C28.3047 16.9167 28.1484 17.5026 27.6797 17.737C27.25 18.0104 26.6641 17.8542 26.4297 17.3854ZM24.0469 18.7917L22.25 12.9713L20.4141 18.7917H24.0469Z"
+                      fill="currentColor"
+                      className="dark:fill-[#F5F5F5] fill-black"
+                    />
+                  </svg>
+                  Couple
+                </button>
+                <button
+                  type="button"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg p-2.5 flex items-center justify-center gap-3 ${
+                    travelWith === "Family" ? "ring-2 ring-[#3643FB]" : ""
+                  }`}
+                  onClick={() => handleTravelWithSelection("Family")}
+                >
+                  <svg
+                    width="24"
+                    height="25"
+                    viewBox="0 0 24 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11.5 5.66666C11.5 6.56509 10.9922 7.38541 10.25 7.85416C9.46875 8.28384 8.49219 8.28384 7.75 7.85416C6.96875 7.38541 6.5 6.56509 6.5 5.66666C6.5 4.80728 6.96875 3.98697 7.75 3.51822C8.49219 3.08853 9.46875 3.08853 10.25 3.51822C10.9922 3.98697 11.5 4.80728 11.5 5.66666ZM8.10156 11.2917C7.47656 11.2917 6.92969 11.7995 6.85156 12.4635L6.69531 14.3776C6.65625 14.7292 6.96875 15.0417 7.32031 15.0417H7.4375H9.78125C9.66406 15.4713 9.625 15.862 9.625 16.2917V16.9167H8.375V22.2292C8.375 22.776 7.94531 23.1667 7.4375 23.1667C6.89062 23.1667 6.5 22.776 6.5 22.2292V16.7995C5.44531 16.4088 4.74219 15.3932 4.82031 14.2213L4.97656 12.3073C5.13281 10.6667 6.5 9.41666 8.10156 9.41666H9.85938C10.2109 9.41666 10.5625 9.49478 10.875 9.61197C10.875 9.76822 10.875 9.92447 10.875 10.0417C10.875 10.5104 10.9531 10.9401 11.1094 11.2917H9.85938H9H8.10156ZM17.125 10.0417C17.125 9.96353 17.0859 9.88541 17.0859 9.76822C17.4766 9.57291 17.9062 9.41666 18.375 9.41666H19.5859C20.7188 9.41666 21.6953 10.1588 22.0078 11.2526L23.5312 16.6042C23.7656 17.3854 23.1406 18.1667 22.3203 18.1667H21.5V22.2292C21.5 22.776 21.0703 23.1667 20.5625 23.1667C20.0156 23.1667 19.625 22.776 19.625 22.2292V18.1667H18.1406C18.2969 17.776 18.375 17.3854 18.375 16.9167V16.2917H21.5L20.2109 11.7604C20.1328 11.487 19.8594 11.2917 19.5859 11.2917H19H18.375H16.8516C17.0078 10.9401 17.125 10.5104 17.125 10.0417ZM21.5 5.66666C21.5 6.56509 20.9922 7.38541 20.25 7.85416C19.4688 8.28384 18.4922 8.28384 17.75 7.85416C16.9688 7.38541 16.5 6.56509 16.5 5.66666C16.5 4.80728 16.9688 3.98697 17.75 3.51822C18.4922 3.08853 19.4688 3.08853 20.25 3.51822C20.9922 3.98697 21.5 4.80728 21.5 5.66666ZM14 11.9167C13.2969 11.9167 12.7109 11.5651 12.3594 10.9792C12.0078 10.4323 12.0078 9.69009 12.3594 9.10416C12.7109 8.55728 13.2969 8.16666 14 8.16666C14.6641 8.16666 15.25 8.55728 15.6016 9.10416C15.9531 9.69009 15.9531 10.4323 15.6016 10.9792C15.25 11.5651 14.6641 11.9167 14 11.9167ZM15.25 16.2917C15.25 15.6276 14.6641 15.0417 14 15.0417C13.2969 15.0417 12.75 15.6276 12.75 16.2917V16.9167C12.75 17.2682 13.0234 17.5417 13.375 17.5417H14H14.625C14.9375 17.5417 15.25 17.2682 15.25 16.9167V16.2917ZM17.125 16.9167C17.125 17.8542 16.5781 18.6745 15.8359 19.1042C15.8359 19.2213 15.875 19.3385 15.875 19.4167V21.9167C15.875 22.6198 15.2891 23.1667 14.625 23.1667H13.375C12.6719 23.1667 12.125 22.6198 12.125 21.9167V19.4167C12.125 19.3385 12.125 19.2213 12.125 19.1042C11.3828 18.6745 10.875 17.8542 10.875 16.9167V16.2917C10.875 14.5729 12.2422 13.1667 14 13.1667C15.7188 13.1667 17.125 14.5729 17.125 16.2917V16.9167Z"
+                      fill="currentColor"
+                      className="dark:fill-[#F5F5F5] fill-black"
+                    />
+                  </svg>
+                  Family
+                </button>
+                <button
+                  type="button"
+                  className={`dark:bg-[#333333] border border-[#BFBFBF] dark:border-[#333333] rounded-lg p-2.5 flex items-center justify-center gap-3 ${
+                    travelWith === "Friends" ? "ring-2 ring-[#3643FB]" : ""
+                  }`}
+                  onClick={() => handleTravelWithSelection("Friends")}
+                >
+                  <svg
+                    width="26"
+                    height="25"
+                    viewBox="0 0 26 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.25 6.91666C6.54688 6.91666 5.96094 6.56509 5.60938 5.97916C5.25781 5.43228 5.25781 4.69009 5.60938 4.10416C5.96094 3.55728 6.54688 3.16666 7.25 3.16666C7.91406 3.16666 8.5 3.55728 8.85156 4.10416C9.20312 4.69009 9.20312 5.43228 8.85156 5.97916C8.5 6.56509 7.91406 6.91666 7.25 6.91666ZM6.70312 10.0417C6.66406 10.0417 6.625 10.0807 6.625 10.0807V15.0417H7.875V10.0807C7.83594 10.0417 7.79688 10.0417 7.75781 10.0417H6.70312ZM6.625 22.2292C6.625 22.776 6.19531 23.1667 5.6875 23.1667C5.14062 23.1667 4.75 22.776 4.75 22.2292V11.9167L3.03125 14.8854C2.79688 15.3542 2.21094 15.5104 1.78125 15.237C1.3125 15.0026 1.15625 14.4167 1.42969 13.987L3.69531 9.92447C4.32031 8.86978 5.45312 8.16666 6.70312 8.16666H7.75781C9.00781 8.16666 10.1406 8.86978 10.7656 9.92447L13.0312 13.987C13.3047 14.4167 13.1484 15.0026 12.6797 15.237C12.25 15.5104 11.6641 15.3542 11.4297 14.8854L9.75 11.9167V22.2292C9.75 22.776 9.32031 23.1667 8.8125 23.1667C8.26562 23.1667 7.875 22.776 7.875 22.2292V16.9167H6.625V22.2292ZM19.75 6.91666C19.0469 6.91666 18.4609 6.56509 18.1094 5.97916C17.7578 5.43228 17.7578 4.69009 18.1094 4.10416C18.4609 3.55728 19.0469 3.16666 19.75 3.16666C20.4141 3.16666 21 3.55728 21.3516 4.10416C21.7031 4.69009 21.7031 5.43228 21.3516 5.97916C21 6.56509 20.4141 6.91666 19.75 6.91666ZM19.2031 10.0417C19.1641 10.0417 19.125 10.0807 19.125 10.0807V15.0417H20.375V10.0807C20.3359 10.0417 20.2969 10.0417 20.2578 10.0417H19.2031ZM19.125 22.2292C19.125 22.776 18.6953 23.1667 18.1875 23.1667C17.6406 23.1667 17.25 22.776 17.25 22.2292V11.9167L15.5312 14.8854C15.2969 15.3542 14.7109 15.5104 14.2812 15.237C13.8125 15.0026 13.6562 14.4167 13.9297 13.987L16.1953 9.92447C16.8203 8.86978 17.9531 8.16666 19.2031 8.16666H20.2578C21.5078 8.16666 22.6406 8.86978 23.2656 9.92447L25.5312 13.987C25.8047 14.4167 25.6484 15.0026 25.1797 15.237C24.75 15.5104 24.1641 15.3542 23.9297 14.8854L22.25 11.9167V22.2292C22.25 22.776 21.8203 23.1667 21.3125 23.1667C20.7656 23.1667 20.375 22.776 20.375 22.2292V16.9167H19.125V22.2292Z"
+                      fill="currentColor"
+                      className="dark:fill-[#F5F5F5] fill-black"
+                    />
+                  </svg>
+                  Friends
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="bg-[#3643FB] text-[#F5F5F5] rounded-lg p-2.5 font-semibold w-full"
+            >
+              Continue
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
